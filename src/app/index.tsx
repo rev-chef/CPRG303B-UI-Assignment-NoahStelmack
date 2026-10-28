@@ -1,98 +1,172 @@
-import * as Device from 'expo-device';
-import { Platform, StyleSheet } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { FlatList, StyleSheet, Text, View, Button, Alert} from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
-import { AnimatedIcon } from '@/components/animated-icon';
-import { HintRow } from '@/components/hint-row';
-import { ThemedText } from '@/components/themed-text';
-import { ThemedView } from '@/components/themed-view';
-import { WebBadge } from '@/components/web-badge';
-import { BottomTabInset, MaxContentWidth, Spacing } from '@/constants/theme';
+import ConnectionCard from "@/components/ConnectionCard";
+import MistakeOrb from "@/components/MistakeOrb";
+import RoundedButton from "@/components/RoundedButton";
+import Header from "../components/Header";
 
-function getDevMenuHint() {
-  if (Platform.OS === 'web') {
-    return <ThemedText type="small">use browser devtools</ThemedText>;
+const CARDS = [
+  {
+    id: "0",
+    text: "ADIRONDACK",
+    category: "green",
+  },
+  {
+    id: "1",
+    text: "KNICKKNACK",
+    category: "purple",
+  },
+  {
+    id: "2",
+    text: "CATSKILL",
+    category: "purple",
+  },
+  {
+    id: "3",
+    text: "HOLIDAY",
+    category: "blue",
+  },
+  {
+    id: "4",
+    text: "COMFORT",
+    category: "blue",
+  },
+  {
+    id: "5",
+    text: "BERKSHIRE",
+    category: "yellow",
+  },
+  {
+    id: "6",
+    text: "STABILITY",
+    category: "purple",
+  },
+  {
+    id: "7",
+    text: "HAMPTON",
+    category: "blue",
+  },
+  {
+    id: "8",
+    text: "WINDSOR",
+    category: "green",
+  },
+  {
+    id: "9",
+    text: "MERRILL",
+    category: "yellow",
+  },
+  {
+    id: "10",
+    text: "WINGBACK",
+    category: "green",
+  },
+  {
+    id: "11",
+    text: "DAYS",
+    category: "blue",
+  },
+  {
+    id: "12",
+    text: "CITI",
+    category: "yellow",
+  },
+  {
+    id: "13",
+    text: "PIANOFORTE",
+    category: "purple",
+  },
+  {
+    id: "14",
+    text: "EAMES",
+    category: "green",
+  },
+  {
+    id: "15",
+    text: "GOLDMAN",
+    category: "yellow",
+  },
+];
+const displayAlert = (): void => {
+    alert("Alert Button Pressed")
   }
-  if (Device.isDevice) {
-    return (
-      <ThemedText type="small">
-        shake device or press <ThemedText type="code">m</ThemedText> in terminal
-      </ThemedText>
-    );
-  }
-  const shortcut = Platform.OS === 'android' ? 'cmd+m (or ctrl+m)' : 'cmd+d';
+
+export default function Index() {
+  
   return (
-    <ThemedText type="small">
-      press <ThemedText type="code">{shortcut}</ThemedText>
-    </ThemedText>
-  );
-}
-
-export default function HomeScreen() {
-  return (
-    <ThemedView style={styles.container}>
-      <SafeAreaView style={styles.safeArea}>
-        <ThemedView style={styles.heroSection}>
-          <AnimatedIcon />
-          <ThemedText type="title" style={styles.title}>
-            Welcome to&nbsp;Expo
-          </ThemedText>
-        </ThemedView>
-
-        <ThemedText type="code" style={styles.code}>
-          get started
-        </ThemedText>
-
-        <ThemedView type="backgroundElement" style={styles.stepContainer}>
-          <HintRow
-            title="Try editing"
-            hint={<ThemedText type="code">src/app/index.tsx</ThemedText>}
-          />
-          <HintRow title="Dev tools" hint={getDevMenuHint()} />
-          <HintRow
-            title="Fresh start"
-            hint={<ThemedText type="code">npm run reset-project</ThemedText>}
-          />
-        </ThemedView>
-
-        {Platform.OS === 'web' && <WebBadge />}
-      </SafeAreaView>
-    </ThemedView>
+    <SafeAreaView style={styles.home}>
+      <Header />
+      <View style={styles.mainContainer}>
+        <Text style={styles.mainText}>Create four groups of four!</Text>
+          <FlatList
+            data={CARDS}
+            numColumns={4}
+            keyExtractor={(item) => item.id}
+            columnWrapperStyle={{ gap: 8, marginVertical: 4}}
+            renderItem={({ item }) => (
+              <ConnectionCard
+                id={item.id}
+                text={item.text}
+                category={item.category}
+              />
+            )}></FlatList>
+        
+        <View style={styles.mistakeContainer}>
+          <Text style={styles.mistakeText}>Mistakes Remaining:</Text>
+          <MistakeOrb />
+          <MistakeOrb />
+          <MistakeOrb />
+          <MistakeOrb />
+        </View>
+        <View style={styles.buttonContainer}>
+          <RoundedButton text="Shuffle" />
+          <RoundedButton text="Deselect All" />
+          <RoundedButton text="Submit" />
+        </View>
+        <View>
+          <Button title="Alert" onPress={displayAlert}></Button>
+        </View>
+        </View>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    flexDirection: 'row',
+  home: {
+    backgroundColor: "#FFF",
+    flex:1
   },
-  safeArea: {
-    flex: 1,
-    paddingHorizontal: Spacing.four,
-    alignItems: 'center',
-    gap: Spacing.three,
-    paddingBottom: BottomTabInset + Spacing.three,
-    maxWidth: MaxContentWidth,
+
+  mainContainer: {
+    alignItems: "center",
   },
-  heroSection: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    flex: 1,
-    paddingHorizontal: Spacing.four,
-    gap: Spacing.four,
+
+  flatlistContainer: {
+    borderColor: "black",
+    borderWidth: 2
   },
-  title: {
-    textAlign: 'center',
+
+  mainText: {
+    fontSize: 25,
+    margin: 10,
   },
-  code: {
-    textTransform: 'uppercase',
+
+  buttonContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    margin:10
   },
-  stepContainer: {
-    gap: Spacing.three,
-    alignSelf: 'stretch',
-    paddingHorizontal: Spacing.three,
-    paddingVertical: Spacing.four,
-    borderRadius: Spacing.four,
+
+  mistakeContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    margin:15
+  },
+
+  mistakeText: {
+    color: "#44403b",
+    fontSize: 20,
   },
 });
